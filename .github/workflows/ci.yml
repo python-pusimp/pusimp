@@ -45,6 +45,8 @@ jobs:
             python-version: "3.12"
           - name: python-3.13
             python-version: "3.13"
+          - name: python-3.14
+            python-version: "3.14"
           - name: debian
             container: debian:testing
           - name: conda
