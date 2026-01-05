@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2025 by the pusimp authors
+# Copyright (C) 2023-2026 by the pusimp authors
 #
 # This file is part of pusimp.
 #
