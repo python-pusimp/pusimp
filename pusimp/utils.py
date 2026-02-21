@@ -127,7 +127,7 @@ class VirtualEnv:
 
     def create(self) -> None:
         """Create a virtual environment, and add it to sys.path."""
-        args = [str(self.path), "--python", sys.executable, "--system-site-packages", "--no-wheel"]
+        args = [str(self.path), "--python", sys.executable, "--system-site-packages"]
         virtualenv.cli_run(args, env=self.env)
         # virtualenv does not necessarily ship the same version of pip as the underlying environment
         run_update_pip = subprocess.run(
