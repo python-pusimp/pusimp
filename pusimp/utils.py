@@ -54,7 +54,7 @@ def assert_package_location(executable: str, package: str, package_path: str) ->
 
 
 def assert_package_import_error(
-    executable: str, package: str, expected: typing.List[str], not_expected: typing.List[str], verbose: bool
+    executable: str, package: str, expected: list[str], not_expected: list[str], verbose: bool
 ) -> None:
     """Assert that a package fails to imports with the expected text in the ImportError message."""
     run_import = subprocess.run(f"{executable} -c 'import {package}'", shell=True, capture_output=True)
@@ -87,9 +87,9 @@ class TemporarilyEnableEnvironmentVariable:
         os.environ[self._variable_name] = "enabled"
 
     def __exit__(
-        self, exception_type: typing.Optional[typing.Type[BaseException]],
-        exception_value: typing.Optional[BaseException],
-        traceback: typing.Optional[types.TracebackType]
+        self, exception_type: type[BaseException] | None,
+        exception_value: BaseException | None,
+        traceback: types.TracebackType | None
     ) -> None:
         """Unset the enviornment variable."""
         del os.environ[self._variable_name]
@@ -118,9 +118,9 @@ class VirtualEnv:
         return self
 
     def __exit__(
-        self, exception_type: typing.Optional[typing.Type[BaseException]],
-        exception_value: typing.Optional[BaseException],
-        traceback: typing.Optional[types.TracebackType]
+        self, exception_type: type[BaseException] | None,
+        exception_value: BaseException | None,
+        traceback: types.TracebackType | None
     ) -> None:
         """Delete the virtual environment."""
         shutil.rmtree(str(self.path.parent), ignore_errors=True)
@@ -142,7 +142,7 @@ class VirtualEnv:
             assert run_update_pip_again.returncode == 0, "Failed to upgrade pip"
 
     def install_package(
-        self, package: str, install_call: typing.Optional[typing.Callable[[str, str], str]] = None
+        self, package: str, install_call: typing.Callable[[str, str], str] | None = None
     ) -> None:
         """Install a package in the virtual environment."""
         if install_call is None:
@@ -169,7 +169,7 @@ class VirtualEnv:
 
     def uninstall_package(
         self, package: str, installation_path: str,
-        uninstall_call: typing.Optional[typing.Callable[[str, str, str], str]] = None
+        uninstall_call: typing.Callable[[str, str, str], str] | None = None
     ) -> None:
         """Uninstall a package from the virtual environment."""
         if uninstall_call is None:
@@ -203,8 +203,8 @@ def assert_package_import_success_without_local_packages(package: str, package_p
 
 
 def assert_package_import_errors_with_local_packages(
-    package: str, dependencies_import_name: typing.List[str], dependencies_pypi_name: typing.List[str],
-    dependencies_extra_error_message: typing.List[str], pip_install_call: typing.Callable[[str, str], str],
+    package: str, dependencies_import_name: list[str], dependencies_pypi_name: list[str],
+    dependencies_extra_error_message: list[str], pip_install_call: typing.Callable[[str, str], str],
     pip_uninstall_call: typing.Callable[[str, str, str], str]
 ) -> None:
     """Assert that a package fails to import with local packages, but imports successfully when they are uninstalled."""
@@ -252,8 +252,8 @@ def _force_yes_in_pip_uninstall_call(
 
 
 def assert_package_import_success_with_allowed_local_packages(
-    package: str, package_path: str, dependencies_import_name: typing.List[str],
-    dependencies_pypi_name: typing.List[str], pip_install_call: typing.Callable[[str, str], str]
+    package: str, package_path: str, dependencies_import_name: list[str],
+    dependencies_pypi_name: list[str], pip_install_call: typing.Callable[[str, str], str]
 ) -> None:
     """Assert that a package imports correctly even with extra local packages when asked to allow user-site imports."""
     with VirtualEnv() as virtual_env:
@@ -268,7 +268,7 @@ def assert_package_import_success_with_allowed_local_packages(
 
 
 def assert_package_import_errors_with_broken_non_optional_packages(
-    package: str, dependencies_import_name: typing.List[str], dependencies_optional: typing.List[bool]
+    package: str, dependencies_import_name: list[str], dependencies_optional: list[bool]
 ) -> None:
     """Assert that a package fails to import when non-optional packages are broken."""
     with VirtualEnv() as virtual_env:
@@ -296,8 +296,8 @@ def assert_package_import_errors_with_broken_non_optional_packages(
 
 
 def assert_package_import_success_with_broken_optional_packages(
-    package: str, package_path: str, dependencies_import_name: typing.List[str],
-    dependencies_optional: typing.List[bool]
+    package: str, package_path: str, dependencies_import_name: list[str],
+    dependencies_optional: list[bool]
 ) -> None:
     """Assert that a package imports correctly when optional packages are broken."""
     with VirtualEnv() as virtual_env:

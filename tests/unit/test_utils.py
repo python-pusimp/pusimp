@@ -7,7 +7,6 @@
 
 import os
 import sys
-import typing
 
 import pytest
 
@@ -172,7 +171,7 @@ def test_uninstall_package_in_virtual_env_custom_call_failure() -> None:
         assert runtime_error_text.startswith("Uninstalling not-really-used was not successful")
 
 
-def generate_test_data_pypi_names(import_names: typing.List[str]) -> typing.List[str]:
+def generate_test_data_pypi_names(import_names: list[str]) -> list[str]:
     """Replace underscore with dash in import names, and add installation from local directory."""
     pypi_names = [import_name.replace("_", "-") for import_name in import_names]
     tests_data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
@@ -242,7 +241,7 @@ def test_assert_package_import_success_without_local_packages_data(package_name:
     ]
 )
 def test_assert_package_import_errors_with_local_packages_data(
-    package_name: str, dependencies_import_name: typing.List[str], dependencies_extra_error_message: typing.List[str]
+    package_name: str, dependencies_import_name: list[str], dependencies_extra_error_message: list[str]
 ) -> None:
     """Test assert_package_import_errors_with_local_packages on mock packages."""
     assert_package_import_errors_with_local_packages(
@@ -280,7 +279,7 @@ def test_assert_package_import_errors_with_local_packages_data(
     ]
 )
 def test_assert_package_import_success_with_allowed_local_packages_data(
-    package_name: str, dependencies_import_name: typing.List[str]
+    package_name: str, dependencies_import_name: list[str]
 ) -> None:
     """Test assert_package_import_success_with_allowed_local_packages on mock packages."""
     assert_package_import_success_with_allowed_local_packages(
@@ -321,7 +320,7 @@ def test_assert_package_import_success_with_allowed_local_packages_data(
     ]
 )
 def test_assert_package_import_errors_with_broken_non_optional_packages_data_success(
-    package_name: str, dependencies_import_name: typing.List[str], dependencies_optional: typing.List[bool]
+    package_name: str, dependencies_import_name: list[str], dependencies_optional: list[bool]
 ) -> None:
     """Test success of assert_package_import_errors_with_broken_non_optional_packages on mock packages.
 
@@ -359,7 +358,7 @@ def test_assert_package_import_errors_with_broken_non_optional_packages_data_suc
     ]
 )
 def test_assert_package_import_errors_with_broken_non_optional_packages_data_failure_position(
-    package_name: str, dependencies_import_name: typing.List[str], dependencies_optional: typing.List[bool]
+    package_name: str, dependencies_import_name: list[str], dependencies_optional: list[bool]
 ) -> None:
     """Test failure of assert_package_import_errors_with_broken_non_optional_packages on mock packages.
 
@@ -408,7 +407,7 @@ def test_assert_package_import_errors_with_broken_non_optional_packages_data_fai
     ]
 )
 def test_assert_package_import_errors_with_broken_non_optional_packages_data_failure_only_optional(
-    package_name: str, dependencies_import_name: typing.List[str], dependencies_optional: typing.List[bool]
+    package_name: str, dependencies_import_name: list[str], dependencies_optional: list[bool]
 ) -> None:
     """Test failure of assert_package_import_errors_with_broken_non_optional_packages on mock packages.
 
@@ -448,7 +447,7 @@ def test_assert_package_import_errors_with_broken_non_optional_packages_data_fai
     ]
 )
 def test_assert_package_import_success_with_broken_optional_packages_data(
-    package_name: str, dependencies_import_name: typing.List[str], dependencies_optional: typing.List[bool]
+    package_name: str, dependencies_import_name: list[str], dependencies_optional: list[bool]
 ) -> None:
     """Test success of assert_package_import_success_with_broken_optional_packages on mock packages.
 

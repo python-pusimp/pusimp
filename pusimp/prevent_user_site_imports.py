@@ -16,10 +16,10 @@ def prevent_user_site_imports(
     system_manager: str,
     contact_url: str,
     dependencies_expected_prefix: str,
-    dependencies_import_name: typing.List[str],
-    dependencies_pypi_name: typing.List[str],
-    dependencies_optional: typing.List[bool],
-    dependencies_extra_error_message: typing.List[str],
+    dependencies_import_name: list[str],
+    dependencies_pypi_name: list[str],
+    dependencies_optional: list[bool],
+    dependencies_extra_error_message: list[str],
     pip_uninstall_call: typing.Callable[[str, str, str], str]
 ) -> None:
     """
@@ -73,10 +73,10 @@ def prevent_user_site_imports(
     allow_user_site_imports_env_value = os.getenv(allow_user_site_imports_env_name) is not None
 
     if not allow_user_site_imports_env_value:
-        missing_dependencies: typing.List[typing.Optional[str]] = [None] * len(dependencies_import_name)
-        broken_dependencies: typing.List[typing.Optional[typing.Dict[str, str]]] = [
+        missing_dependencies: list[str | None] = [None] * len(dependencies_import_name)
+        broken_dependencies: list[dict[str, str] | None] = [
             None] * len(dependencies_import_name)
-        user_site_dependencies: typing.List[typing.Optional[typing.Dict[str, str]]] = [
+        user_site_dependencies: list[dict[str, str] | None] = [
             None] * len(dependencies_import_name)
         for (dependency_id, dependency_import_name) in enumerate(dependencies_import_name):
             dependency_module_expected_path = f"{dependencies_expected_prefix}/{dependency_import_name}/__init__.py"
