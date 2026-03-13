@@ -8,12 +8,12 @@ on:
 
 jobs:
   test_0_1_0_installing_from_github:
-    uses: python-pusimp/pusimp/.github/workflows/ci.yml@v0.1.0.post3
+    uses: python-pusimp/pusimp/.github/workflows/ci.yml@v0.1.1.post1
     with:
       ref: v0.1.0
 
   test_0_1_0_installing_from_pypi:
-    uses: python-pusimp/pusimp/.github/workflows/ci.yml@v0.1.0.post3
+    uses: python-pusimp/pusimp/.github/workflows/ci.yml@v0.1.1.post1
     with:
       ref: v0.1.0
       index: PyPI
