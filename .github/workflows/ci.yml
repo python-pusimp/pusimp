@@ -64,7 +64,7 @@ jobs:
           ref: ${{ inputs.ref }}
       - name: Install dependencies (default GitHub actions image)
         if: startsWith(matrix.name, 'python-') == true
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies (debian image)
