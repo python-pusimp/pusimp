@@ -5,3 +5,5 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    ignore:
+      - dependency-name: "python-pusimp/pusimp/.github/workflows/ci.yml"
