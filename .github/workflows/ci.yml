@@ -59,7 +59,7 @@ jobs:
       - name: Mark workspace as safe
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
       - name: Install dependencies (default GitHub actions image)
