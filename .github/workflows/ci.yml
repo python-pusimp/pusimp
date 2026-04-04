@@ -59,12 +59,12 @@ jobs:
       - name: Mark workspace as safe
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
         with:
           ref: ${{ inputs.ref }}
       - name: Install dependencies (default GitHub actions image)
         if: startsWith(matrix.name, 'python-') == true
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies (debian image)
@@ -166,13 +166,3 @@ jobs:
       - name: Check test coverage
         run: |
           python3 -m coverage report --fail-under=100 --show-missing --skip-covered
-
-  warn:
-    runs-on: ubuntu-latest
-    if: github.repository == 'python-pusimp/pusimp' && github.ref == 'refs/heads/main' && github.event_name == 'schedule'
-    steps:
-      - name: Warn if scheduled workflow is about to be disabled
-        uses: fem-on-colab/warn-workflow-about-to-be-disabled-action@main
-        with:
-          workflow-filename: ci.yml
-          days-elapsed: 50
