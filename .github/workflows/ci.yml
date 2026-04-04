@@ -56,9 +56,6 @@ jobs:
         run: |
           apt update -y -q
           apt install -y -qq ca-certificates git
-      - name: Mark workspace as safe
-        run: |
-          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
       - uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
@@ -147,6 +144,7 @@ jobs:
           find tests/data -mindepth 1 -maxdepth 1 -type d -exec python3 -m pip install ${PIP_INSTALL_DEFAULT_FLAGS} {} \;
       - name: Clean build files
         run: |
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           git clean -xdf
       - name: Run ruff
         run: |
