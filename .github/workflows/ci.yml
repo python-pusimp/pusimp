@@ -56,12 +56,12 @@ jobs:
         run: |
           apt update -y -q
           apt install -y -qq ca-certificates git
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           ref: ${{ inputs.ref }}
       - name: Install dependencies (default GitHub actions image)
         if: startsWith(matrix.name, 'python-') == true
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies (debian image)
@@ -170,7 +170,7 @@ jobs:
     if: github.repository == 'python-pusimp/pusimp' && github.ref == 'refs/heads/main' && github.event_name == 'schedule'
     steps:
       - name: Warn if scheduled workflow is about to be disabled
-        uses: fem-on-colab/warn-workflow-about-to-be-disabled-action@main
+        uses: fem-on-colab/warn-workflow-about-to-be-disabled-action@58c6022d9aeb22accfa8df9bf5b58c3d8867208c  # v1.0.0
         with:
           workflow-filename: ci.yml
           days-elapsed: 50
