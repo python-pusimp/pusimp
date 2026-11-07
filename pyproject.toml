@@ -93,6 +93,12 @@ allowed-unresolved-imports = [
 
 [tool.ty.environment]
 extra-paths = [
+    "tests/data/pusimp_dependency_one",
+    "tests/data/pusimp_dependency_two",
+    "tests/data/pusimp_dependency_three",
+    "tests/data/pusimp_dependency_four",
+    "tests/data/pusimp_dependency_five",
+    "tests/data/pusimp_dependency_six",
     "tests/data/pusimp_golden_source",
     "tests/data/pusimp_package_one",
     "tests/data/pusimp_package_two",
@@ -101,10 +107,8 @@ extra-paths = [
     "tests/data/pusimp_package_five",
     "tests/data/pusimp_package_six",
     "tests/data/pusimp_package_seven",
-    "tests/data/pusimp_dependency_one",
-    "tests/data/pusimp_dependency_two",
-    "tests/data/pusimp_dependency_three",
-    "tests/data/pusimp_dependency_four",
-    "tests/data/pusimp_dependency_five",
-    "tests/data/pusimp_dependency_six",
+    "tests/data/pusimp_package_eight",
+    "tests/data/pusimp_package_nine",
+    "tests/data/pusimp_package_ten",
+    "tests/data/pusimp_package_eleven",
 ]
