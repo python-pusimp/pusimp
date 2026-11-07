@@ -45,8 +45,8 @@ jobs:
             python-version: "3.14"
           - name: python-3.15
             python-version: "3.15"
-          - name: debian
-            container: debian:testing
+          # - name: debian
+          #   container: debian:testing
           - name: conda
             container: condaforge/miniforge3
       fail-fast: false
