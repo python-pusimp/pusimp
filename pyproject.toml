@@ -42,9 +42,9 @@ issues = "https://github.com/python-pusimp/pusimp/issues"
 
 [project.optional-dependencies]
 lint = [
-    "isort",
-    "mypy",
+    "prek",
     "ruff",
+    "ty",
     "yamllint"
 ]
 tests = [
@@ -54,41 +54,26 @@ tests = [
     "virtualenv"
 ]
 
-[tool.isort]
-line_length = 120
-multi_line_output = 4
-order_by_type = false
-
-[tool.mypy]
-check_untyped_defs = true
-disallow_any_unimported = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-pretty = true
-show_error_codes = true
-strict = true
-warn_return_any = true
-warn_unused_ignores = true
-
-[[tool.mypy.overrides]]
-module = [
-    "pusimp_dependency_missing",
-    "tomllib",
-    "virtualenv"
-]
-ignore_missing_imports = true
-
 [tool.pytest.ini_options]
 
 [tool.ruff]
-line-length = 120
+line-length = 80
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
-select = ["ANN", "D", "E", "F", "FLY", "ICN", "N", "Q", "RUF", "UP", "W"]
+select = [
+    "ANN", "ARG", "B", "C4", "D", "E", "F", "FLY", "I", "ICN", "N", "PTH", "Q",
+    "RUF", "T20", "TC", "UP", "W"
+]
 ignore = []
 
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
+
 [tool.ruff.lint.pycodestyle]
-max-doc-length = 120
+max-doc-length = 80
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
@@ -98,3 +83,28 @@ pusimp = ["py.typed"]
 
 [tool.setuptools.packages.find]
 namespaces = false
+
+[tool.ty.analysis]
+allowed-unresolved-imports = [
+    "pusimp_dependency_missing",
+    "tomllib",
+    "virtualenv.**",
+]
+
+[tool.ty.environment]
+extra-paths = [
+    "tests/data/pusimp_golden_source",
+    "tests/data/pusimp_package_one",
+    "tests/data/pusimp_package_two",
+    "tests/data/pusimp_package_three",
+    "tests/data/pusimp_package_four",
+    "tests/data/pusimp_package_five",
+    "tests/data/pusimp_package_six",
+    "tests/data/pusimp_package_seven",
+    "tests/data/pusimp_dependency_one",
+    "tests/data/pusimp_dependency_two",
+    "tests/data/pusimp_dependency_three",
+    "tests/data/pusimp_dependency_four",
+    "tests/data/pusimp_dependency_five",
+    "tests/data/pusimp_dependency_six",
+]

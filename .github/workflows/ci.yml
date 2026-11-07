@@ -146,18 +146,9 @@ jobs:
         run: |
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           git clean -xdf
-      - name: Run ruff
+      - name: Run prek
         run: |
-          python3 -m ruff check .
-      - name: Run isort
-        run: |
-          python3 -m isort --check --diff .
-      - name: Run mypy
-        run: |
-          python3 -m mypy .
-      - name: Run yamllint
-        run: |
-          python3 -m yamllint -d "{extends: default, rules: {document-start: {present: false}, line-length: disable, truthy: {check-keys: false}}}" .
+          prek --all-files --show-diff-on-failure
       - name: Run tests
         run: |
           python3 -m coverage run --source=pusimp -m pytest -vv tests/unit

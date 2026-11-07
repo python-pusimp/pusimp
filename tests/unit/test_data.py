@@ -5,8 +5,8 @@
 # SPDX-License-Identifier: MIT
 """Test imports of mock packages in tests/data."""
 
-import importlib
-import os
+import importlib.metadata
+import pathlib
 import shutil
 import sys
 import tempfile
@@ -25,7 +25,7 @@ all_mock_packages = [
     "pusimp_package_six",
     "pusimp_package_seven",
     "pusimp_package_eight",
-    "pusimp_package_nine"
+    "pusimp_package_nine",
 ]
 
 all_mock_dependencies = [
@@ -34,27 +34,27 @@ all_mock_dependencies = [
     "pusimp_dependency_three",
     "pusimp_dependency_four",
     "pusimp_dependency_five",
-    "pusimp_dependency_six"
+    "pusimp_dependency_six",
 ]
 
-all_mock_golden = [
-    "pusimp_golden_source"
-]
+all_mock_golden = ["pusimp_golden_source"]
 
 
 def test_data_versions() -> None:
-    """Test that the version of every mock package, dependency and golden is the same as the main package."""
+    """Test that all mock package versions match the main package."""
     pusimp_version = importlib.metadata.version("pusimp")
     if "9999" in pusimp_version:
-        # Versions on TestPyPI have a mock version number formed by the actual version number, a separator 9999,
-        # and then the upload date to work around the fact that releases cannot be overwritten. Recognize this
-        # case and transform the mock version number into the actual version number.
+        # TestPyPI versions include separator 9999 and an upload date
+        # because releases cannot be overwritten. Convert to the actual
+        # version number for comparison.
         pusimp_version, _ = pusimp_version.split("9999")
         if pusimp_version[-1] == ".":
-            # Leading zeros are not conserved when preparing the distribution: just add it back.
+            # Restore the trailing zero lost when preparing distributions.
             pusimp_version = f"{pusimp_version}0"
     for mock in all_mock_packages + all_mock_dependencies + all_mock_golden:
-        assert importlib.metadata.version(mock.replace("_", "-")) == pusimp_version
+        assert (
+            importlib.metadata.version(mock.replace("_", "-")) == pusimp_version
+        )
 
 
 def test_data_one() -> None:
@@ -73,78 +73,108 @@ def test_data_three() -> None:
 
 
 def test_data_four() -> None:
-    """Test that the fourth mock package in tests/data fails to import due to a missing mandatory dependency."""
+    """Test failure with a missing mandatory dependency."""
     with pytest.raises(ImportError) as excinfo:
         import pusimp_package_four  # noqa: F401
     import_error_text = str(excinfo.value)
-    print(f"The following ImportError was raised:\n{import_error_text}")
-    assert "pusimp has detected the following problems with pusimp_package_four dependencies" in import_error_text
-    assert "Missing dependencies:" in import_error_text
     assert (
-        "* pusimp_dependency_missing is missing. Its expected path was "
-        f"{os.path.join(pusimp_golden_source.system_path, 'pusimp_dependency_missing', '__init__.py')}."
+        "pusimp has detected the following problems with "
+        "pusimp_package_four dependencies" in import_error_text
+    )
+    assert "Missing dependencies:" in import_error_text
+    missing_dependency_path = (
+        pathlib.Path(pusimp_golden_source.system_path)
+        / "pusimp_dependency_missing"
+        / "__init__.py"
+    )
+    assert (
+        "* pusimp_dependency_missing is missing. "
+        "Its expected path was "
+        f"{missing_dependency_path}."
     ) in import_error_text
     assert "To install missing dependencies:" in import_error_text
-    assert "* check how to install pusimp_dependency_missing with mock system package manager" in import_error_text
-    assert "believe that this message appears incorrectly, report this at mock contact URL ." in import_error_text
+    assert (
+        "* check how to install pusimp_dependency_missing "
+        "with mock system package manager" in import_error_text
+    )
+    assert (
+        "believe that this message appears incorrectly, report this "
+        "at mock contact URL ." in import_error_text
+    )
 
 
 def test_data_five() -> None:
-    """Test that the fifth mock package in tests/data import correctly, because the missing dependency is optional."""
+    """Test import success with an optional missing dependency."""
     import pusimp_package_five  # noqa: F401
 
 
 def test_data_six() -> None:
-    """Test that the sixth mock package in tests/data fails to import due to a broken mandatory dependency."""
+    """Test failure with a broken mandatory dependency."""
     with pytest.raises(ImportError) as excinfo:
         import pusimp_package_six  # noqa: F401
     import_error_text = str(excinfo.value)
-    print(f"The following ImportError was raised:\n{import_error_text}")
-    assert "pusimp has detected the following problems with pusimp_package_six dependencies" in import_error_text
+    assert (
+        "pusimp has detected the following problems with "
+        "pusimp_package_six dependencies" in import_error_text
+    )
     assert "Broken dependencies:" in import_error_text
     assert (
-        "pusimp_dependency_four is broken. Error on import was 'pusimp_dependency_four is a broken package.'."
+        "pusimp_dependency_four is broken. Error on import was "
+        "'pusimp_dependency_four is a broken package.'."
     ) in import_error_text
     assert "To fix broken dependencies:" in import_error_text
     assert (
-        f"* run '{sys.executable} -m pip show pusimp-dependency-four' in a terminal: if the location field is not "
-        f"{pusimp_golden_source.system_path} consider running '{sys.executable} -m pip uninstall "
-        "pusimp-dependency-four' in a terminal, because the broken dependency is probably being imported from "
-        "a local path rather than from the path provided by mock system package manager."
+        f"* run '{sys.executable} -m pip show pusimp-dependency-four' "
+        "in a terminal: if the location field is not "
+        f"{pusimp_golden_source.system_path} consider running "
+        f"'{sys.executable} -m pip uninstall pusimp-dependency-four' "
+        "in a terminal, because the broken dependency is probably being "
+        "imported from a local path rather than from the path provided by "
+        "mock system package manager."
     ) in import_error_text
-    assert "believe that this message appears incorrectly, report this at mock contact URL ." in import_error_text
+    assert (
+        "believe that this message appears incorrectly, report this "
+        "at mock contact URL ." in import_error_text
+    )
 
 
 def test_data_seven() -> None:
-    """Test that the seventh mock package in tests/data import correctly, because the broken dependency is optional."""
+    """Test import success with an optional broken dependency."""
     import pusimp_package_seven  # noqa: F401
 
 
 def test_data_eight_nine_ten() -> None:
-    """Test that the eighth to tenth mock package in tests/data fails to import due to dependencies from user site.
+    """Test that packages eight to ten reject dependencies from user-site.
 
-    Note that the eighth and ninth mock package are tested in the same function, rather than two separate functions,
-    because they both the depend on pusimp_dependency_five and pusimp_dependency_six, which will get replaced
-    by an user-site installation inside this test. However, since the python interpreter only loads a module once,
-    we have to be sure that every mock package that requires pusimp_dependency_five and pusimp_dependency_six operates
-    in the same environment.
+    Packages eight and nine share dependencies that are replaced by
+    user-site installations below. Since Python loads each module only once,
+    test all affected packages in the same environment.
     """
     mock_system_site_path = pusimp_golden_source.system_path
     mock_user_site_path = tempfile.mkdtemp()
     sys.path.insert(0, mock_user_site_path)
-    for dependency_import_name in ("pusimp_dependency_five", "pusimp_dependency_six"):
-        dependency_user_site = os.path.join(mock_user_site_path, dependency_import_name)
-        os.makedirs(dependency_user_site)
-        with open(os.path.join(dependency_user_site, "__init__.py"), "w") as init_file:
+    for dependency_import_name in (
+        "pusimp_dependency_five",
+        "pusimp_dependency_six",
+    ):
+        dependency_user_site = (
+            pathlib.Path(mock_user_site_path) / dependency_import_name
+        )
+        dependency_user_site.mkdir()
+        with (dependency_user_site / "__init__.py").open("w") as init_file:
             init_file.write("# created by pytest")
     try:
-        for pusimp_package in ("pusimp_package_eight", "pusimp_package_nine", "pusimp_package_ten"):
+        for pusimp_package in (
+            "pusimp_package_eight",
+            "pusimp_package_nine",
+            "pusimp_package_ten",
+        ):
             with pytest.raises(ImportError) as excinfo:
                 importlib.import_module(pusimp_package)
             import_error_text = str(excinfo.value)
-            print(f"The following ImportError was raised:\n{import_error_text}")
             assert (
-                f"pusimp has detected the following problems with {pusimp_package} dependencies"
+                "pusimp has detected the following problems with "
+                f"{pusimp_package} dependencies"
             ) in import_error_text
             if pusimp_package == "pusimp_package_ten":
                 assert "Missing dependencies:" in import_error_text
@@ -152,47 +182,76 @@ def test_data_eight_nine_ten() -> None:
                 assert "Broken dependencies:" in import_error_text
                 assert "To fix broken dependencies:" in import_error_text
             assert (
-                "Dependencies imported from a local path rather than from the path provided by "
+                "Dependencies imported from a local path rather than from "
+                "the path provided by "
                 "mock system package manager:"
             ) in import_error_text
             assert "To uninstall local dependencies:" in import_error_text
             if pusimp_package == "pusimp_package_ten":
+                missing_dependency_path = (
+                    pathlib.Path(mock_system_site_path)
+                    / "pusimp_dependency_missing"
+                    / "__init__.py"
+                )
                 assert (
-                    "* pusimp_dependency_missing is missing. Its expected path was "
-                    f"{os.path.join(mock_system_site_path, 'pusimp_dependency_missing', '__init__.py')}."
+                    "* pusimp_dependency_missing is missing. "
+                    "Its expected path was "
+                    f"{missing_dependency_path}."
                 ) in import_error_text
                 assert (
-                    "* check how to install pusimp_dependency_missing with mock system package manager."
+                    "* check how to install pusimp_dependency_missing "
+                    "with mock system package manager."
                 ) in import_error_text
                 assert (
                     "pusimp_dependency_four is broken. Error on import was "
                     "'pusimp_dependency_four is a broken package.'."
                 ) in import_error_text
                 assert (
-                    f"* run '{sys.executable} -m pip show pusimp-dependency-four' in a terminal: if the location "
-                    f"field is not {mock_system_site_path} consider running '{sys.executable} -m pip uninstall "
-                    "pusimp-dependency-four' in a terminal, because the broken dependency is probably being imported "
-                    "from a local path rather than from the path provided by mock system package manager."
+                    f"* run '{sys.executable} -m pip show "
+                    "pusimp-dependency-four' "
+                    "in a terminal: if the location field is not "
+                    f"{mock_system_site_path} consider running "
+                    f"'{sys.executable} -m pip uninstall "
+                    "pusimp-dependency-four' "
+                    "in a terminal, because the broken dependency is probably "
+                    "being imported from a local path rather than from the "
+                    "path provided by mock system package manager."
                 ) in import_error_text
-            for (dependency_import_name, dependency_optional_string) in (
+            for dependency_import_name, dependency_optional_string in (
                 ("pusimp_dependency_five", "mandatory"),
-                ("pusimp_dependency_six", "optional")
+                ("pusimp_dependency_six", "optional"),
             ):
+                system_dependency_path = (
+                    pathlib.Path(mock_system_site_path)
+                    / dependency_import_name
+                    / "__init__.py"
+                )
+                user_dependency_path = (
+                    pathlib.Path(mock_user_site_path)
+                    / dependency_import_name
+                    / "__init__.py"
+                )
                 assert (
-                    f"* {dependency_import_name} was imported from a local path: expected in "
-                    f"{os.path.join(mock_system_site_path, dependency_import_name, '__init__.py')}, "
+                    f"* {dependency_import_name} was imported from a local "
+                    "path: expected in "
+                    f"{system_dependency_path}, "
                     f"but imported from "
-                    f"{os.path.join(mock_user_site_path, dependency_import_name, '__init__.py')}."
+                    f"{user_dependency_path}."
                 ) in import_error_text
                 dependency_pypi_name = dependency_import_name.replace("_", "-")
+                user_dependency_dir = (
+                    pathlib.Path(mock_user_site_path) / dependency_import_name
+                )
                 assert (
-                    f"* run '{sys.executable} -m pip uninstall {dependency_pypi_name}' in a terminal, "
-                    f"and verify that you are prompted to confirm removal of files in "
-                    f"{os.path.join(mock_user_site_path, dependency_import_name)}. "
+                    f"* run '{sys.executable} -m pip uninstall "
+                    f"{dependency_pypi_name}' in a terminal, and verify "
+                    "that you are prompted to confirm removal of files in "
+                    f"{user_dependency_dir}. "
                     f"{dependency_import_name} is {dependency_optional_string}."
                 ) in import_error_text
             assert (
-                "believe that this message appears incorrectly, report this at mock contact URL ."
+                "believe that this message appears incorrectly, report this "
+                "at mock contact URL ."
             ) in import_error_text
     finally:
         del sys.path[0]
