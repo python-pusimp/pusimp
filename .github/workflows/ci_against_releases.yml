@@ -31,6 +31,18 @@ jobs:
       index: PyPI
       index_version: 0.1.1
 
+  test_0_1_2_installing_from_github:
+    uses: python-pusimp/pusimp/.github/workflows/ci.yml@v0.1.2
+    with:
+      ref: v0.1.2
+
+  test_0_1_2_installing_from_pypi:
+    uses: python-pusimp/pusimp/.github/workflows/ci.yml@v0.1.2
+    with:
+      ref: v0.1.2
+      index: PyPI
+      index_version: 0.1.2
+
   warn:
     runs-on: ubuntu-latest
     if: github.repository == 'python-pusimp/pusimp' && github.ref == 'refs/heads/main' && github.event_name == 'schedule'
