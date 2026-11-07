@@ -26,6 +26,8 @@ all_mock_packages = [
     "pusimp_package_seven",
     "pusimp_package_eight",
     "pusimp_package_nine",
+    "pusimp_package_ten",
+    "pusimp_package_eleven",
 ]
 
 all_mock_dependencies = [

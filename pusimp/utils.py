@@ -53,18 +53,26 @@ def assert_package_location(
 ) -> None:
     """Assert that a package imports from the expected location."""
     assert_has_package(executable, package)
+    marker = "__PUSIMP_PACKAGE_LOCATION__="
+    code = (
+        "import importlib; "
+        f"module = importlib.import_module({package!r}); "
+        f"print({marker!r} + str(module.__file__), flush=True)"
+    )
     run_import_file = subprocess.run(
-        f"{executable} -c 'import {package}; print({package}.__file__)'",
-        shell=True,
-        capture_output=True,
+        [executable, "-c", code], capture_output=True, text=True
     )
     assert run_import_file.returncode == 0, (
         "This case was never supposed to happen: "
         "{package} imported successfully with assert_has_package"
     )
-    assert run_import_file.stdout.decode().strip() == package_path, (
-        f"{package} was expected at {package_path}, but found at "
-        f"{run_import_file.stdout.decode().strip()}"
+    locations = [
+        line.removeprefix(marker)
+        for line in run_import_file.stdout.splitlines()
+        if line.startswith(marker)
+    ]
+    assert locations == [package_path], (
+        f"{package} was expected at {package_path}, but found at {locations}"
     )
 
 

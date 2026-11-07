@@ -322,6 +322,7 @@ def generate_test_data_pypi_names(import_names: list[str]) -> list[str]:
         # "pusimp_package_nine",
         # # its dependencies may be local, missing, or broken
         # "pusimp_package_ten",
+        "pusimp_package_eleven",
     ],
 )
 def test_assert_package_import_success_without_local_packages_data(
@@ -437,6 +438,9 @@ def test_assert_package_import_success_without_local_packages_data(
         #     "pusimp_package_ten", [], []
         # ),  # pusimp_dependency_missing is not installable,
         # pusimp_dependency_four is always broken
+        # (
+        #     "pusimp_package_eleven", [], []
+        # ),  # it has no local dependencies to trigger this failure
     ],
 )
 def test_assert_package_import_errors_with_local_packages_data(
@@ -498,6 +502,7 @@ def test_assert_package_import_errors_with_local_packages_data(
         #     "pusimp_package_ten", [], []
         # ),  # pusimp_dependency_missing is not installable,
         # pusimp_dependency_four is always broken
+        ("pusimp_package_eleven", []),
     ],
 )
 def test_assert_package_import_success_with_allowed_local_packages_data(
@@ -575,6 +580,9 @@ def test_assert_package_import_success_with_allowed_local_packages_data(
         #     "pusimp_package_ten", [], []
         # ),  # pusimp_dependency_missing is not installable,
         # pusimp_dependency_four is always broken
+        # (
+        #     "pusimp_package_eleven", [], []
+        # ),  # it has no mandatory dependencies to break
     ],
 )
 def test_assert_package_import_errors_with_broken_non_optional_packages_data_success(  # noqa: E501
@@ -644,6 +652,9 @@ def test_assert_package_import_errors_with_broken_non_optional_packages_data_suc
         #     "pusimp_package_ten", [], []
         # ),  # pusimp_dependency_missing is not installable,
         # pusimp_dependency_four is always broken
+        # (
+        #     "pusimp_package_eleven", [], []
+        # ),  # it has no mandatory dependency to import before the guard
     ],
 )
 def test_assert_package_import_errors_with_broken_non_optional_packages_data_failure_position(  # noqa: E501
@@ -723,6 +734,9 @@ def test_assert_package_import_errors_with_broken_non_optional_packages_data_fai
         #     "pusimp_package_ten", [], []
         # ),  # pusimp_dependency_missing is not installable,
         # pusimp_dependency_four is always broken
+        # (
+        #     "pusimp_package_eleven", [], []
+        # ),  # it has no optional dependencies to list
     ],
 )
 def test_assert_package_import_errors_with_broken_non_optional_packages_data_failure_only_optional(  # noqa: E501
@@ -791,6 +805,9 @@ def test_assert_package_import_errors_with_broken_non_optional_packages_data_fai
         #     "pusimp_package_ten", [], []
         # ),  # pusimp_dependency_missing is not installable,
         # pusimp_dependency_four is always broken
+        # (
+        #     "pusimp_package_eleven", [], []
+        # ),  # it has no optional dependency to break
     ],
 )
 def test_assert_package_import_success_with_broken_optional_packages_data(
